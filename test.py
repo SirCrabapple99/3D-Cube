@@ -6,7 +6,7 @@ faces = [[1, 2, 3, 4], [1, 2, 6, 5], [1, 4, 8, 5], [3, 4, 8, 7], [5, 6, 7, 8], [
 faceverts = []
 newverts = []
 adjustedverts = []
-rotation = []
+rotation = [0, 0, 1]
 cubegroup = [Rect(200, 200, 200, 200)]
 
 focal = 200
@@ -22,7 +22,6 @@ def cubeinit():
     for i in app.group:
         app.group.remove(i)
     faceverts = []
-    rotation = []
     adjustedverts = []
     # set 0, 0 to center and adjust vert list into only x and y
     x = -1
@@ -35,7 +34,6 @@ def cubeinit():
         adjustedverts.append([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
         newverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
         faceverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
-        rotation.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
     x = -1
     # adjust vertices to match perspective
     for i in faceverts:
@@ -87,7 +85,7 @@ def cube():
     # create final shape
     for i in adjustedverts:
         c += 1
-        x = Polygon(fill = 'steelBlue', border = None)
+        x = Polygon(fill = None, border = 'white', borderWidth = 5)
         x.pointList = adjustedverts[c]
         cubegroup.append(x)
     adjustedverts = []
@@ -103,7 +101,6 @@ def rotatex(amountdeg):
     global faceverts
     global newverts
     global adjustedverts
-    global rotation
     global cubegroup
     global focal
     deg = amountdeg * (math.pi/180)
@@ -113,16 +110,15 @@ def rotatex(amountdeg):
         x += 1
         for f in i:
             c += 1
-            xx = rotation[x][c][0]
-            zz = rotation[x][c][1]
-            yy = rotation[x][c][2]
-            fz = newverts[x][c][1]
-            fy = newverts[x][c][2]
-            newverts[x][c][1] = ((yy * math.cos(deg)) - (zz * math.sin(deg))) + (fz - zz)
-            newverts[x][c][2] = ((yy * math.sin(deg)) + (zz * math.cos(deg))) + (fy - yy)
-            rotation[x][c][0] = newverts[x][c][0]
-            rotation[x][c][1] = newverts[x][c][1]
-            rotation[x][c][2] = newverts[x][c][2]
+            fx = adjustedverts[x][c][0]
+            fz = adjustedverts[x][c][1]
+            fy = adjustedverts[x][c][2]
+            xx = newverts[x][c][0]
+            zz = newverts[x][c][1]
+            yy = newverts[x][c][2]
+            newverts[x][c][1] = ((yy * math.cos(deg)) - (zz * math.sin(deg)))
+            newverts[x][c][2] = ((yy * math.sin(deg)) + (zz * math.cos(deg)))
+            
     cube()
 # rotate around y axis
 def rotatey(amountdeg):
@@ -132,7 +128,6 @@ def rotatey(amountdeg):
     global faceverts
     global newverts
     global adjustedverts
-    global rotation
     global cubegroup
     global focal
     deg = amountdeg * (math.pi/180)
@@ -142,17 +137,14 @@ def rotatey(amountdeg):
         x += 1
         for f in i:
             c += 1
-            xx = rotation[x][c][0]
-            zz = rotation[x][c][1]
-            yy = rotation[x][c][2]
-            fx = newverts[x][c][0]
-            fz = newverts[x][c][1]
-            newverts[x][c][0] = (((xx * math.cos(deg)) + (zz * math.sin(deg))) + (fx - xx))
-            newverts[x][c][1] = (((-1 * xx) * math.sin(deg)) + (zz * math.cos(deg)) + (fz - zz))
-            rotation[x][c][0] = newverts[x][c][0]
-            rotation[x][c][1] = newverts[x][c][1]
-            rotation[x][c][2] = newverts[x][c][2]
-            
+            fx = adjustedverts[x][c][0]
+            fz = adjustedverts[x][c][1]
+            fy = adjustedverts[x][c][2]
+            xx = newverts[x][c][0]
+            zz = newverts[x][c][1]
+            yy = newverts[x][c][2]
+            newverts[x][c][0] = (((xx * math.cos(deg)) + (zz * math.sin(deg))))
+            newverts[x][c][1] = (((-1 * xx) * math.sin(deg)) + (zz))
             
     cube()
 # rotate around z axis
@@ -163,7 +155,6 @@ def rotatez(amountdeg):
     global faceverts
     global newverts
     global adjustedverts
-    global rotation
     global cubegroup
     global focal
     deg = amountdeg * (math.pi/180)
@@ -173,16 +164,14 @@ def rotatez(amountdeg):
         x += 1
         for f in i:
             c += 1
-            xx = rotation[x][c][0]
-            zz = rotation[x][c][1]
-            yy = rotation[x][c][2]
-            fx = newverts[x][c][0]
-            fy = newverts[x][c][2]
-            newverts[x][c][0] = ((xx * math.cos(deg)) - (yy * math.sin(deg))) + (fx - xx)
-            newverts[x][c][2] = ((xx * math.sin(deg)) + (yy * math.cos(deg))) + (fy - yy)
-            rotation[x][c][0] = newverts[x][c][0]
-            rotation[x][c][1] = newverts[x][c][1]
-            rotation[x][c][2] = newverts[x][c][2]
+            fx = adjustedverts[x][c][0]
+            fz = adjustedverts[x][c][1]
+            fy = adjustedverts[x][c][2]
+            xx = newverts[x][c][0]
+            zz = newverts[x][c][1]
+            yy = newverts[x][c][2]
+            newverts[x][c][0] = ((xx * math.cos(deg)) - (yy * math.sin(deg)))
+            newverts[x][c][2] = ((xx * math.sin(deg)) + (yy * math.cos(deg)))
     cube()
 def move(amount, xx, yy, zz):
     x = -1
@@ -210,19 +199,19 @@ def onKeyHold(keys):
         if i == 'c':
             move(-5, 0, 1, 0)
         if i == 'right':
-            rotatey(5)
-        if i == 'left':
             rotatey(-5)
+        if i == 'left':
+            rotatey(5)
         if i == 'up':
             rotatez(5)
         if i == 'down':
             rotatez(-5)
 
 app.stepsPerSecond = 30;
-def onStep():
-    rotatez(1)
-    rotatey(1)
-    choice = [-1, 0, 1]
-    move(5, rounded(random.choice(choice)), rounded(random.choice(choice)),rounded(random.choice(choice)))
+# def onStep():
+#     rotatez(1)
+#     rotatey(1)
+#     choice = [-1, 0, 1]
+#     move(5, rounded(random.choice(choice)), rounded(random.choice(choice)),rounded(random.choice(choice)))
 cubeinit()
 cube()
