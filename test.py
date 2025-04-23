@@ -138,7 +138,7 @@ def rotatey(amountdeg):
             zz = newverts[x][c][1]
             yy = newverts[x][c][2]
             newverts[x][c][0] = (((xx * math.cos(deg)) + (zz * math.sin(deg))))
-            newverts[x][c][1] = (((-1 * xx) * math.sin(deg)) + (zz))
+            newverts[x][c][1] = (((-1 * xx) * math.sin(deg)) + (zz * math.cos(deg)))
             
     cube()
 # rotate around z axis
