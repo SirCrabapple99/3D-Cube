@@ -6,7 +6,7 @@ import math
 import random
 app.background = 'black'
 baseverts = [[-50, 50, -50], [50, 50, -50], [25, 50, 25], [-25, 50, 25], [-50, -50, -50], [50, -50, -50], [50, -50, -50], [50, -50, -50], [50, -50, 75]]
-faces = [[1, 2, 3, 4], [1, 2, 6, 5], [1, 4, 4, 5], [3, 4, 4, 3], [5, 6, 6, 5], [5, 6, 6, 9]]
+faces = [[1, 2, 3, 4, 'blue'], [1, 2, 6, 5], [1, 4, 4, 5], [3, 4, 4, 3], [5, 6, 6, 5], [5, 6, 6, 9]]
 faceverts = []
 newverts = []
 adjustedverts = []
@@ -33,7 +33,7 @@ def cubeinit():
         x += 1
     x = -1
     # change adjusted verts to each face
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
         newverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
@@ -71,7 +71,7 @@ def cube():
         x += 1
     x = -1
     # change adjusted verts to each face
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
         faceverts = (newverts)
@@ -87,14 +87,19 @@ def cube():
         # print(" ")
     c = -1
     # create final shape
+    # it is possible to make a face a certain color by adding a 5th value (the color as a string) to the face. Be warned, I have not implemented correct layers, so the faces overlap
     for i in adjustedverts:
         c += 1
-        x = Polygon(fill = None, border = 'white', borderWidth = 5)
+        x = Polygon(fill = None, borderWidth = 1)
+        if len(faces[c]) == 4:
+            x.border = 'white'
+        else:
+            x.border = faces[c][4]
         x.pointList = adjustedverts[c]
         cubegroup.append(x)
     adjustedverts = []
     x = -1
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
 # rotate around x axis
