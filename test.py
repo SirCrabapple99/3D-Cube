@@ -110,9 +110,6 @@ def rotatex(amountdeg):
         x += 1
         for f in i:
             c += 1
-            fx = adjustedverts[x][c][0]
-            fz = adjustedverts[x][c][1]
-            fy = adjustedverts[x][c][2]
             xx = newverts[x][c][0]
             zz = newverts[x][c][1]
             yy = newverts[x][c][2]
@@ -137,9 +134,6 @@ def rotatey(amountdeg):
         x += 1
         for f in i:
             c += 1
-            fx = adjustedverts[x][c][0]
-            fz = adjustedverts[x][c][1]
-            fy = adjustedverts[x][c][2]
             xx = newverts[x][c][0]
             zz = newverts[x][c][1]
             yy = newverts[x][c][2]
@@ -164,9 +158,6 @@ def rotatez(amountdeg):
         x += 1
         for f in i:
             c += 1
-            fx = adjustedverts[x][c][0]
-            fz = adjustedverts[x][c][1]
-            fy = adjustedverts[x][c][2]
             xx = newverts[x][c][0]
             zz = newverts[x][c][1]
             yy = newverts[x][c][2]
