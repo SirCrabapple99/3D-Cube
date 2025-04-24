@@ -6,6 +6,7 @@ verts = []
 faces = []
 objgroup = [Rect(200, 200, 200, 200)]
 app.background = 'black'
+app.maxShapes = 999999999
 # obj file
 obj_data = """
 v 0.437500 0.164062 0.765625
@@ -2068,8 +2069,7 @@ def renderobject():
     # for i in projectedverts:
         
     for i in projectedverts:
-        poly = Polygon(fill = None, border = gradient('red', 'orange', 'yellow',
-     start='right-top'), borderWidth = 1)
+        poly = Polygon(fill = 'white', border = None)
         poly.pointList = i
         objgroup.append(poly)
 
