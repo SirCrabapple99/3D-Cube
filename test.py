@@ -1,13 +1,87 @@
+# uses quads btw (i think thats what they are), pretty sure theres no limit/minimum faces/verts
+# also I dont remember what half the variables do im pretty sure I could get rid of faceverts though
+# also your faces need to be in order but im pretty sure that's standard
+# origin is set to 0, 0, 0 so figure it out if you want to change that
 import math
 import random
+
+icosahedron_data = """v 0.000000 -0.525731 0.850651
+v 0.850651 0.000000 0.525731
+v 0.850651 0.000000 -0.525731
+v -0.850651 0.000000 -0.525731
+v -0.850651 0.000000 0.525731
+v -0.525731 0.850651 0.000000
+v 0.525731 0.850651 0.000000
+v 0.525731 -0.850651 0.000000
+v -0.525731 -0.850651 0.000000
+v 0.000000 -0.525731 -0.850651
+v 0.000000 0.525731 -0.850651
+v 0.000000 0.525731 0.850651
+vn 0.934172 0.356822 0.000000
+vn 0.934172 -0.356822 0.000000
+vn -0.934172 0.356822 0.000000
+vn -0.934172 -0.356822 0.000000
+vn 0.000000 0.934172 0.356822
+vn 0.000000 0.934172 -0.356822
+vn 0.356822 0.000000 -0.934172
+vn -0.356822 0.000000 -0.934172
+vn 0.000000 -0.934172 -0.356822
+vn 0.000000 -0.934172 0.356822
+vn 0.356822 0.000000 0.934172
+vn -0.356822 0.000000 0.934172
+vn 0.577350 0.577350 -0.577350
+vn 0.577350 0.577350 0.577350
+vn -0.577350 0.577350 -0.577350
+vn -0.577350 0.577350 0.577350
+vn 0.577350 -0.577350 -0.577350
+vn 0.577350 -0.577350 0.577350
+vn -0.577350 -0.577350 -0.577350
+vn -0.577350 -0.577350 0.577350
+f 2//1 3//1 7//1
+f 2//2 8//2 3//2
+f 4//3 5//3 6//3
+f 5//4 4//4 9//4
+f 7//5 6//5 12//5
+f 6//6 7//6 11//6
+f 10//7 11//7 3//7
+f 11//8 10//8 4//8
+f 8//9 9//9 10//9
+f 9//10 8//10 1//10
+f 12//11 1//11 2//11
+f 1//12 12//12 5//12
+f 7//13 3//13 11//13
+f 2//14 7//14 12//14
+f 4//15 6//15 11//15
+f 6//16 5//16 12//16
+f 3//17 8//17 10//17
+f 8//18 2//18 1//18
+f 4//19 10//19 9//19
+f 5//20 9//20 1//20"""
+
+# object file conversion
+icosplit = icosahedron_data.splitlines()
+icoverts = []
+icofaces = []
+x = 0
+for i in icosplit:
+    if i[0] == 'v' and i[1] != 'n':
+        icoverts.append([float([i[2:].split(' ')][0][0])])
+print(icoverts)
+
 app.background = 'black'
-baseverts = [[-50, 50, -50], [50, 50, -50], [50, 50, 50], [-50, 50, 50], [-50, -50, -50], [50, -50, -50], [50, -50, 50], [-50, -50, 50]]
-faces = [[1, 2, 3, 4], [1, 2, 6, 5], [1, 4, 8, 5], [3, 4, 8, 7], [5, 6, 7, 8], [2, 3, 7, 6]]
 faceverts = []
 newverts = []
 adjustedverts = []
 offset = [[0, 0], [0, 0], [0, 0]]
 cubegroup = [Rect(200, 200, 200, 200)]
+baseverts = [[-50, 50, -50], [50, 50, -50], [50, 50, 50], [-50, 50, 50], [-50, -50, -50], [50, -50, -50], [50, -50, 50], [-50, -50, 50]]
+baseverts = [[x * 0.5 for x in v] for v in baseverts]
+tri = []
+
+# Convert triangular faces into quads
+faces = [[1, 2, 3, 4], [1, 2, 6, 5], [1, 4, 8, 5], [3, 4, 8, 7], [5, 6, 7, 8], [2, 3, 7, 6]]
+for i in tri:
+    faces.append([i[0], i[1], i[2], i[2]])
 
 focal = 200
 def cubeinit():
@@ -29,7 +103,7 @@ def cubeinit():
         x += 1
     x = -1
     # change adjusted verts to each face
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
         newverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
@@ -67,7 +141,7 @@ def cube():
         x += 1
     x = -1
     # change adjusted verts to each face
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]])
         faceverts = (newverts)
@@ -83,14 +157,19 @@ def cube():
         # print(" ")
     c = -1
     # create final shape
+    # it is possible to make a face a certain color by adding a 5th value (the color as a string) to the face. Be warned, I have not implemented correct layers, so the faces overlap
     for i in adjustedverts:
         c += 1
-        x = Polygon(fill = None, border = 'white', borderWidth = 5)
+        x = Polygon(fill = None, borderWidth = 1)
+        if len(faces[c]) == 4:
+            x.border = 'white'
+        else:
+            x.border = faces[c][4]
         x.pointList = adjustedverts[c]
         cubegroup.append(x)
     adjustedverts = []
     x = -1
-    for i in faces:
+    while x < 5:
         x += 1
         adjustedverts.append([[baseverts[faces[x][0] - 1][0], baseverts[faces[x][0] - 1][1], baseverts[faces[x][0] - 1][2]], [baseverts[faces[x][1] - 1][0], baseverts[faces[x][1] - 1][1], baseverts[faces[x][1] - 1][2]], [baseverts[faces[x][2] - 1][0], baseverts[faces[x][2] - 1][1], baseverts[faces[x][2] - 1][2]], [baseverts[faces[x][3] - 1][0], baseverts[faces[x][3] - 1][1], baseverts[faces[x][3] - 1][2]]])
 # rotate around x axis
@@ -222,12 +301,14 @@ def onKeyHold(keys):
         if i == 'down':
             rotatex(5)
 app.stepsPerSecond = 30;
+
 # def onStep():
 #     rotatez(1)
 #     rotatey(1)
 #     choice = [-1, 0, 1]
 #     move(5, rounded(random.choice(choice)), rounded(random.choice(choice)),rounded(random.choice(choice)))
+
 cubeinit()
-rotatex(25)
+# cube
 
 cube()
