@@ -6,6 +6,7 @@ verts = []
 faces = []
 objgroup = [Rect(200, 200, 200, 200)]
 
+# obj file
 icosahedron_data = """
 v 0.000000 -0.525731 0.850651
 v 0.850651 0.000000 0.525731
@@ -62,12 +63,15 @@ f 5//20 9//20 1//20"""
 
 # obj file conversion
 icosplit = icosahedron_data.splitlines()
-# for i in icosplit:
+
 # my original code:
+# for i in icosplit:
 #     if i[0] == 'v' and i[1] != 'n' and i[1] != 't':
 #         icoverts.append([float([i[2:].split(' ')][0][0]), float([i[2:].split(' ')][0][2]), float([i[2:].split(' ')][0][1])])
 #     if i[0] == 'f':
 #         icofaces.append([int([i[2:].split(' ')][0][0].split('/')[0]) - 1, int([i[2:].split(' ')][0][2].split('/')[0]) - 1, int([i[2:].split(' ')][0][1].split('/')[0]) - 1])
+
+
 # chatgpt cleaned up this part:
 for line in icosahedron_data.splitlines():
     if line.startswith('v '):
@@ -116,6 +120,7 @@ def renderobject():
     projectedverts = []
     for i in app.group:
         app.group.remove(i)
+    # project to 2d with perspective view from the 3d vectors
     for i in faceverts:
         for x in i:
             projectedverts.append([
@@ -130,12 +135,14 @@ def renderobject():
                     (200 * (i[2][1]/(i[2][2] + 200))) + 200
                 ]
             ])
+    # draw polygons based off 2d projection vectors
     for i in projectedverts:
         poly = Polygon(fill = None, border = 'black', borderWidth = 0.5)
         poly.pointList = i
         objgroup.append(poly)
 
 def move(amount, xx, yy, zz):
+    # translation
     global offset
     global faceverts
     offset[0][0] += amount * xx
@@ -158,14 +165,17 @@ def rotatex(amountdeg):
     deg = amountdeg * (math.pi/180)
     for i in faceverts:
         for f in i:
+            # translate to center
             f[0] -= offset[0][0]
             f[1] -= offset[1][0]
             f[2] -= offset[2][0]
             xx = f[0]
             yy = f[1]
             zz = f[2]
+            # rotate
             f[1] = ((yy * math.cos(deg) - (zz * math.sin(deg))))
             f[2] = ((yy * math.sin(deg) + (zz * math.cos(deg))))
+            # translate back
             f[0] += offset[0][0]
             f[1] += offset[1][0]
             f[2] += offset[2][0]
@@ -181,14 +191,17 @@ def rotatey(amountdeg):
     deg = amountdeg * (math.pi/180)
     for i in faceverts:
         for f in i:
+            # translate to center
             f[0] -= offset[0][0]
             f[1] -= offset[1][0]
             f[2] -= offset[2][0]
             xx = f[0]
             yy = f[1]
             zz = f[2]
+            # rotate
             f[0] = (((xx * math.cos(deg)) + (zz * math.sin(deg))))
             f[2] = (((-1 * xx) * math.sin(deg)) + (zz * math.cos(deg)))
+            # translate back
             f[0] += offset[0][0]
             f[1] += offset[1][0]
             f[2] += offset[2][0]
@@ -204,14 +217,17 @@ def rotatez(amountdeg):
     deg = amountdeg * (math.pi/180)
     for i in faceverts:
         for f in i:
+            # translate to center
             f[0] -= offset[0][0]
             f[1] -= offset[1][0]
             f[2] -= offset[2][0]
             xx = f[0]
             yy = f[1]
             zz = f[2]
+            # rotate
             f[0] = ((xx * math.cos(deg)) - (yy * math.sin(deg)))
             f[1] = ((xx * math.sin(deg)) + (yy * math.cos(deg)))
+            # translate back
             f[0] += offset[0][0]
             f[1] += offset[1][0]
             f[2] += offset[2][0]
