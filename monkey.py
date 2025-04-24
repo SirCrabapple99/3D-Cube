@@ -2069,7 +2069,7 @@ def renderobject():
     # for i in projectedverts:
         
     for i in projectedverts:
-        poly = Polygon(fill = 'white', border = None)
+        poly = Polygon(fill = None, border = 'blue', borderWidth = 0.1)
         poly.pointList = i
         objgroup.append(poly)
 
@@ -2188,4 +2188,5 @@ def onKeyHold(keys):
         if i == 'down':
             rotatex(5)
 initobject()
+rotatex(180)
 renderobject()
