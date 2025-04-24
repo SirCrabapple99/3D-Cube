@@ -5,6 +5,7 @@
 import math
 import random
 
+# obj file (remove all empty newlines)
 icosahedron_data = """v 0.000000 -0.525731 0.850651
 v 0.850651 0.000000 0.525731
 v 0.850651 0.000000 -0.525731
@@ -62,11 +63,16 @@ f 5//20 9//20 1//20"""
 icosplit = icosahedron_data.splitlines()
 icoverts = []
 icofaces = []
-x = 0
+# get vertices
 for i in icosplit:
     if i[0] == 'v' and i[1] != 'n':
-        icoverts.append([float([i[2:].split(' ')][0][0])])
-print(icoverts)
+        icoverts.append([float([i[2:].split(' ')][0][0]), float([i[2:].split(' ')][0][2]), float([i[2:].split(' ')][0][1])])
+    if i[0] == 'f':
+        x = 0
+        g = 0
+        for y in [i[2:].split(' ')]:
+            icofaces.append([int(y[0].split('//')[0]), int(y[2].split('//')[0]), int(y[1].split('//')[0])])
+print(icofaces)
 
 app.background = 'black'
 faceverts = []
@@ -74,12 +80,12 @@ newverts = []
 adjustedverts = []
 offset = [[0, 0], [0, 0], [0, 0]]
 cubegroup = [Rect(200, 200, 200, 200)]
-baseverts = [[-50, 50, -50], [50, 50, -50], [50, 50, 50], [-50, 50, 50], [-50, -50, -50], [50, -50, -50], [50, -50, 50], [-50, -50, 50]]
-baseverts = [[x * 0.5 for x in v] for v in baseverts]
-tri = []
+baseverts = icoverts
+baseverts = [[x * 100 for x in v] for v in baseverts]
+tri = icofaces
 
 # Convert triangular faces into quads
-faces = [[1, 2, 3, 4], [1, 2, 6, 5], [1, 4, 8, 5], [3, 4, 8, 7], [5, 6, 7, 8], [2, 3, 7, 6]]
+faces = []
 for i in tri:
     faces.append([i[0], i[1], i[2], i[2]])
 
