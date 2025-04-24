@@ -1,0 +1,4 @@
+renders 3d objects using the CMU 2d graphics library.
+
+Can load obj files, paste in the data and remove empty newlines
+Currently layers are not correct so if using multiple colors layers will overlap
