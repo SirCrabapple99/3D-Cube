@@ -1,4 +1,4 @@
-# uses quads btw (i think thats what they are), pretty sure theres no limit/minimum faces/verts
+# uses quads btw
 # also I dont remember what half the variables do im pretty sure I could get rid of faceverts though
 # also your faces need to be in order but im pretty sure that's standard
 # origin is set to 0, 0, 0 so figure it out if you want to change that
@@ -6,38 +6,39 @@ import math
 import random
 
 # obj file (remove all empty newlines)
-icosahedron_data = """v 0.000000 -0.525731 0.850651
+icosahedron_data = """
+v 0.000000 -0.525731 0.850651
 v 0.850651 0.000000 0.525731
-v 0.850651 0.000000 -0.525731
-v -0.850651 0.000000 -0.525731
+v 0.850651 -0.000000 -0.525731
+v -0.850651 -0.000000 -0.525731
 v -0.850651 0.000000 0.525731
-v -0.525731 0.850651 0.000000
-v 0.525731 0.850651 0.000000
+v -0.525731 0.850651 -0.000000
+v 0.525731 0.850651 -0.000000
 v 0.525731 -0.850651 0.000000
 v -0.525731 -0.850651 0.000000
 v 0.000000 -0.525731 -0.850651
 v 0.000000 0.525731 -0.850651
 v 0.000000 0.525731 0.850651
-vn 0.934172 0.356822 0.000000
-vn 0.934172 -0.356822 0.000000
-vn -0.934172 0.356822 0.000000
-vn -0.934172 -0.356822 0.000000
-vn 0.000000 0.934172 0.356822
-vn 0.000000 0.934172 -0.356822
-vn 0.356822 0.000000 -0.934172
-vn -0.356822 0.000000 -0.934172
-vn 0.000000 -0.934172 -0.356822
-vn 0.000000 -0.934172 0.356822
-vn 0.356822 0.000000 0.934172
-vn -0.356822 0.000000 0.934172
-vn 0.577350 0.577350 -0.577350
-vn 0.577350 0.577350 0.577350
-vn -0.577350 0.577350 -0.577350
-vn -0.577350 0.577350 0.577350
-vn 0.577350 -0.577350 -0.577350
-vn 0.577350 -0.577350 0.577350
-vn -0.577350 -0.577350 -0.577350
-vn -0.577350 -0.577350 0.577350
+vn 0.9342 0.3568 -0.0000
+vn 0.9342 -0.3568 -0.0000
+vn -0.9342 0.3568 -0.0000
+vn -0.9342 -0.3568 -0.0000
+vn -0.0000 0.9342 0.3568
+vn -0.0000 0.9342 -0.3568
+vn 0.3568 -0.0000 -0.9342
+vn -0.3568 -0.0000 -0.9342
+vn -0.0000 -0.9342 -0.3568
+vn -0.0000 -0.9342 0.3568
+vn 0.3568 -0.0000 0.9342
+vn -0.3568 -0.0000 0.9342
+vn 0.5774 0.5774 -0.5774
+vn 0.5774 0.5774 0.5774
+vn -0.5774 0.5774 -0.5774
+vn -0.5774 0.5774 0.5774
+vn 0.5774 -0.5774 -0.5774
+vn 0.5774 -0.5774 0.5774
+vn -0.5774 -0.5774 -0.5774
+vn -0.5774 -0.5774 0.5774
 f 2//1 3//1 7//1
 f 2//2 8//2 3//2
 f 4//3 5//3 6//3
@@ -64,16 +65,22 @@ icosplit = icosahedron_data.splitlines()
 icoverts = []
 icofaces = []
 # get vertices
-for i in icosplit:
-    if i[0] == 'v' and i[1] != 'n':
-        icoverts.append([float([i[2:].split(' ')][0][0]), float([i[2:].split(' ')][0][2]), float([i[2:].split(' ')][0][1])])
-    if i[0] == 'f':
-        x = 0
-        g = 0
-        for y in [i[2:].split(' ')]:
-            icofaces.append([int(y[0].split('//')[0]), int(y[2].split('//')[0]), int(y[1].split('//')[0])])
-print(icofaces)
 
+# for i in icosplit:
+# original code:
+#     if i[0] == 'v' and i[1] != 'n' and i[1] != 't':
+#         icoverts.append([float([i[2:].split(' ')][0][0]), float([i[2:].split(' ')][0][2]), float([i[2:].split(' ')][0][1])])
+#     if i[0] == 'f':
+#         icofaces.append([int([i[2:].split(' ')][0][0].split('/')[0]) - 1, int([i[2:].split(' ')][0][2].split('/')[0]) - 1, int([i[2:].split(' ')][0][1].split('/')[0]) - 1])
+# chatgpt cleaned up this part:
+for line in icosahedron_data.splitlines():
+    if line.startswith('v '):
+        _, x, y, z = line.split()
+        icoverts.append([float(x), float(y), float(z)])
+    elif line.startswith('f '):
+        parts = line.split()[1:]
+        face = [int(p.split('/')[0]) for p in parts]
+        icofaces.append(face)
 app.background = 'black'
 faceverts = []
 newverts = []
@@ -82,13 +89,12 @@ offset = [[0, 0], [0, 0], [0, 0]]
 cubegroup = [Rect(200, 200, 200, 200)]
 baseverts = icoverts
 baseverts = [[x * 100 for x in v] for v in baseverts]
-tri = icofaces
-
 # Convert triangular faces into quads
 faces = []
-for i in tri:
-    faces.append([i[0], i[1], i[2], i[2]])
-
+for i in icofaces:
+    faces.append([i[0], i[1], i[1], i[2]])
+print(f"Verts: {len(baseverts)} | Faces: {len(faces)}\n")
+print(f"Verts: {baseverts} \n\nFaces: {faces}")
 focal = 200
 def cubeinit():
     global baseverts
@@ -126,6 +132,7 @@ def cubeinit():
         # print(" ")
     c = -1
     # create final shape
+    print(f"\nVerts: {adjustedverts}")
     for i in adjustedverts:
         c += 1
         x = Polygon()
@@ -307,7 +314,6 @@ def onKeyHold(keys):
         if i == 'down':
             rotatex(5)
 app.stepsPerSecond = 30;
-
 # def onStep():
 #     rotatez(1)
 #     rotatey(1)
