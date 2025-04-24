@@ -6,7 +6,7 @@ verts = []
 faces = []
 objgroup = [Rect(200, 200, 200, 200)]
 app.background = 'black'
-app.maxShapes = 999999999
+app.setMaxShapeCount(999999999)
 # obj file
 obj_data = """
 v 0.437500 0.164062 0.765625
